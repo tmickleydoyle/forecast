@@ -36,13 +36,13 @@ export class NeuralNetwork {
         this.hidden_nodes = args[1];
         this.output_nodes = args[2];
 
-        this.epochs = 50000;
+        this.epochs = 10000;
         this.activation = relu; 
-        this.lr = .01;
-        this.output = 0; 
+        this.lr = .0001;
+        this.output = Math.random(); 
 
-        this.synapse_zero = random([this.input_nodes, this.hidden_nodes], -0.1, 0.1);
-        this.synapse_one = random([this.hidden_nodes, this.output_nodes], -0.1, 0.1);
+        this.synapse_zero = random([this.input_nodes, this.hidden_nodes], 0, 1);
+        this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
 
     }
     setEpochs(numEpochs) {
@@ -71,7 +71,7 @@ export class NeuralNetwork {
                 break;
             }
             default: {
-                this.activation = relu;
+                this.activation = sigmoid;
                 break;
             } 
         }
@@ -94,7 +94,7 @@ export class NeuralNetwork {
                 
             this.synapse_one = add(this.synapse_one, multiply(transpose(hidden_layer_activated), multiply(output_delta, this.lr)));
             this.synapse_zero = add(this.synapse_zero, multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
-            this.output = dotMultiply(output_layer_activated, 15);
+            this.output = output_layer_activated;
 
             if (i % 10000 == 0)
                 console.log(`Error: ${mean(abs(output_error))}`);
