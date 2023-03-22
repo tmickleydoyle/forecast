@@ -28,7 +28,7 @@ const ForecastInput = () => {
         <div className='centertexts'>
             <br />
             <h1>MLP Forecast</h1>
-            <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of two numbers in order to predict the next number in the sequence.</p>
+            <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of five numbers in order to predict the next number in the sequence.</p>
             <br />
             <form onSubmit={handleSubmit}>
                 <label>
