@@ -36,7 +36,7 @@ export class NeuralNetwork {
         this.hidden_nodes = args[1];
         this.output_nodes = args[2];
 
-        this.epochs = 10000;
+        this.epochs = 1000;
         this.activation = relu; 
         this.lr = .0001;
         this.output = Math.random(); 
@@ -82,9 +82,9 @@ export class NeuralNetwork {
     train(input, target) {
         for (let i = 0; i < this.epochs; i++) {
             let input_layer = input;
-            let hidden_layer_logits_one = multiply(input_layer, this.synapse_zero);
-            let hidden_layer_activated_one = hidden_layer_logits_one.map(v => this.activation(v, false));
-            let output_layer_logits = multiply(hidden_layer_activated_one, this.synapse_one);
+            let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
+            let hidden_layer_activated = hidden_layer_logits.map(v => this.activation(v, false));
+            let output_layer_logits = multiply(hidden_layer_activated, this.synapse_one);
             let output_layer_activated = output_layer_logits.map(v => this.activation(v, false))
 
             let output_error = subtract(target, output_layer_activated);

@@ -4,7 +4,7 @@ const NeuralNetwork = require('../../utils/nn');
 
 const windowSize = 5;
 
-const nn = new NeuralNetwork(windowSize, windowSize * 2, 1);
+const nn = new NeuralNetwork(windowSize, windowSize * 2, windowSize * 2, 1);
 
 function normalizeData(input, target) {
   const normalizedData = {};
