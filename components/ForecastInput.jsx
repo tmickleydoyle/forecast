@@ -51,7 +51,7 @@ const ForecastInput = () => {
             {running === true && inputData !== '' && (
                 <div>
                     <h2>Prediction:</h2>
-                    <p style={{ fontSize: '24px' }}>Loading...</p>
+                    <p style={{ fontSize: '24px' }}>Training...</p>
                 </div>
             )}
             {prediction && running === false && inputData !== '' && (
