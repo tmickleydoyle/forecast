@@ -37,7 +37,7 @@ const ForecastInput = () => {
                         type="text"
                         value={inputData}
                         onChange={(event) => setInputData(event.target.value)}
-                        placeholder="Enter data (comma-separated): 5,4,6,7,5,6"
+                        placeholder="Enter data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
                     />
                 </label>
                 <button className='custombutton' type="submit">Submit</button>
