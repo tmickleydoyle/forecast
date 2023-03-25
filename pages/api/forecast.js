@@ -2,10 +2,6 @@ import {matrix} from 'mathjs'
 
 const NeuralNetwork = require('../../utils/nn');
 
-const windowSize = 5;
-
-const nn = new NeuralNetwork(windowSize, windowSize * 2, windowSize * 2, 1);
-
 function normalizeData(input, target) {
   const normalizedData = {};
 
@@ -38,6 +34,8 @@ export default async function handler(req, res) {
 
     const inputData = body.inputData.split(',').map(x => Number(x.trim()));
     const input = [];
+    const windowSize = body.windowSize || 5;
+    const nn = new NeuralNetwork(windowSize, Math.round(windowSize + 1), 1);
 
     const target = inputData.slice(windowSize).map((x) => [x]);
 
