@@ -46,7 +46,7 @@ export class NeuralNetwork {
         this.hidden_nodes = args[1];
         this.output_nodes = args[2];
 
-        this.epochs = 200;
+        this.epochs = 2500;
         this.activation = relu;
         this.lr = 0.0005;
         this.l2 = 0.001;
@@ -93,10 +93,12 @@ export class NeuralNetwork {
         this.l2 = l2;
     }
     train(input, target, lambda = 0.001) {
+        let prev_output_error = null;
         for (let i = 0; i < this.epochs; i++) {
             let input_layer = input;
             let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
             let hidden_layer_activated = hidden_layer_logits.map(v => this.activation(v, false));
+
             let output_layer_logits = multiply(hidden_layer_activated, this.synapse_one);
             let output_layer_activated = output_layer_logits.map(v => this.activation(v, false))
 
@@ -112,8 +114,15 @@ export class NeuralNetwork {
             this.synapse_zero = add(add(this.synapse_zero, reg_zero), multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
             this.output = output_layer_activated;
 
+            if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
+                console.log(`Early Stop at Epoch ${i} - Error: ${mean(abs(output_error))}`);
+                break;
+            }
+
+            prev_output_error = mean(abs(output_error));
+
             if (i % 100 == 0)
-                console.log(`Error: ${mean(abs(output_error))}`);
+                console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
         }
     }
     predict(input) {
