@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
     const inputData = body.inputData.split(',').map(x => Number(x.trim()));
     const input = [];
-    const windowSize = body.windowSize || 5;
+    const windowSize = body.windowSize || 1;
     // const nn = new NeuralNetwork(windowSize, Math.round((windowSize + 1) / 2), 1);
     const nn = new NeuralNetwork(windowSize, 2, 1);
 

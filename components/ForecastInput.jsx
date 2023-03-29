@@ -56,7 +56,7 @@ const ForecastInput = () => {
                         type="number"
                         value={windowSize}
                         onChange={(event) => setWindowSize(event.target.value)}
-                        placeholder="Enter rolling window size (default: 5)"
+                        placeholder="Enter rolling window size (default: 1)"
                     />
                 </label>
                 <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
