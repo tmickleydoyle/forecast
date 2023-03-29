@@ -1,15 +1,22 @@
 import { useState } from 'react';
+import LineGraph from './LineGraph';
 
 const ForecastInput = () => {
     const [inputData, setInputData] = useState('');
     const [windowSize, setWindowSize] = useState();
     const [prediction, setPrediction] = useState('');
     const [running, setRunning] = useState(false);
+    const [indexes, setIndexes] = useState([]);
+    const [input, setInput] = useState([]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             setRunning(true);
+            setIndexes([]);
+            setInput([]);
+            const graphData = inputData.trim().split(',').map(Number);
+            const inputIndexes = Array.from(graphData, (_, i) => i);
             const predictMLPResponse = await fetch('/api/forecast', {
                 method: 'POST',
                 body: JSON.stringify({ inputData, windowSize }),
@@ -20,6 +27,8 @@ const ForecastInput = () => {
             const { prediction } = await predictMLPResponse.json();
             setPrediction(prediction);
             setRunning(false);
+            setIndexes(inputIndexes);
+            setInput(graphData);
         } catch (error) {
             console.error(error);
         }
@@ -50,7 +59,7 @@ const ForecastInput = () => {
                         placeholder="Enter rolling window size (default: 5)"
                     />
                 </label>
-                <button className='custombutton' type="submit">Submit</button>
+                <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
             </form>
             {inputData === '' && running === false && (
                 <div>
@@ -65,10 +74,16 @@ const ForecastInput = () => {
                 </div>
             )}
             {prediction && running === false && inputData !== '' && (
-                <div>
-                    <h2>Prediction:</h2>
-                    <p style={{ fontSize: '24px' }}>{prediction.toFixed(2)}</p>
-                </div>
+                <>
+                    <div>
+                        <h2>Prediction:</h2>
+                        <p style={{ fontSize: '24px' }}>{prediction.toFixed(2)}</p>
+                    </div>
+                    <br />
+                    <div>
+                        <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={prediction.toFixed(2)} />
+                    </div>
+                </>
             )}
         </div>
     );

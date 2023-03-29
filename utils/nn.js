@@ -115,14 +115,14 @@ export class NeuralNetwork {
             this.output = output_layer_activated;
 
             if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
-                console.log(`Early Stop at Epoch ${i} - Error: ${mean(abs(output_error))}`);
+                // console.log(`Early Stop at Epoch ${i} - Error: ${mean(abs(output_error))}`);
                 break;
             }
 
             prev_output_error = mean(abs(output_error));
 
-            if (i % 100 == 0)
-                console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
+            // if (i % 100 == 0)
+            //     console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
         }
     }
     predict(input) {

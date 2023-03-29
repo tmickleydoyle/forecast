@@ -8,9 +8,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.37",
+    "chart.js": "^4.2.1",
     "mathjs": "^11.7.0",
     "next": "13.2.4",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
