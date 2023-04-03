@@ -55,8 +55,6 @@ const LineGraph = ({ title, labels, data, forecast }) => {
         }
     }
 
-    console.log(labels.length, forecast)
-
     return (
         <>
             <br /> 

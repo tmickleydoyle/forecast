@@ -6,6 +6,7 @@ import {
     random,
     multiply,
     dotMultiply,
+    dotDivide,
     mean,
     abs,
     subtract,
@@ -40,7 +41,7 @@ function linear(x, derivative = false) {
     return derivative ? 1 : x;
 }
 
-export class NeuralNetwork {
+export class MLP {
     constructor(...args) {
         this.input_nodes = args[0];
         this.hidden_nodes = args[1];
@@ -55,49 +56,21 @@ export class NeuralNetwork {
         this.synapse_zero = random([this.input_nodes, this.hidden_nodes], 0, 1);
         this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
     }
-    setEpochs(numEpochs) {
-        this.epochs = numEpochs;
-    }
-    setActivation(func) {
-        switch (func) {
-            case 'sigmoid': {
-                this.activation = sigmoid;
-                break;
-            }
-            case 'tanh': {
-                this.activation = tanh;
-                break;
-            }
-            case 'relu': {
-                this.activation = relu;
-                break;
-            }
-            case 'softplus': {
-                this.activation = softplus;
-                break;
-            }
-            case 'linear': {
-                this.activation = linear;
-                break;
-            }
-            default: {
-                this.activation = sigmoid;
-                break;
-            }
-        }
-    }
-    setLearningRate(lr) {
-        this.lr = lr;
-    }
-    setL2(l2) {
-        this.l2 = l2;
-    }
-    train(input, target, lambda = 0.001) {
+
+    train(input, target, lambda = 0.0001, dropout_prob = 0.05) {
         let prev_output_error = null;
+        let num_lower = 0;
         for (let i = 0; i < this.epochs; i++) {
             let input_layer = input;
             let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
             let hidden_layer_activated = hidden_layer_logits.map(v => this.activation(v, false));
+
+            if (dropout_prob > 0) {
+                let dropout_mask = random([this.hidden_nodes], 0, 1);
+                dropout_mask = dropout_mask.map(v => v >= dropout_prob ? 1 : 0);
+                hidden_layer_activated = dotMultiply(hidden_layer_activated, dropout_mask);
+                hidden_layer_activated = dotDivide(hidden_layer_activated, 1 - dropout_prob);
+            }
 
             let output_layer_logits = multiply(hidden_layer_activated, this.synapse_one);
             let output_layer_activated = output_layer_logits.map(v => this.activation(v, false))
@@ -114,15 +87,18 @@ export class NeuralNetwork {
             this.synapse_zero = add(add(this.synapse_zero, reg_zero), multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
             this.output = output_layer_activated;
 
-            if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
-                // console.log(`Early Stop at Epoch ${i} - Error: ${mean(abs(output_error))}`);
-                break;
+            if (i % 100 == 0) {
+               console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
+                if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
+                    num_lower++;
+                    if (num_lower >= 5) {
+                        console.log(`Early Stop at Epoch ${i} - Current Error: ${mean(abs(output_error))} - Previous Error: ${prev_output_error}`);
+                        break;
+                    }
+                }
             }
 
             prev_output_error = mean(abs(output_error));
-
-            // if (i % 100 == 0)
-            //     console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
         }
     }
     predict(input) {
@@ -133,4 +109,4 @@ export class NeuralNetwork {
     }
 }
 
-module.exports = NeuralNetwork;
+module.exports = MLP;
