@@ -4,7 +4,7 @@ import LineGraph from './LineGraph';
 const ForecastInput = () => {
     const [inputData, setInputData] = useState('');
     const [windowSize, setWindowSize] = useState();
-    const [prediction, setPrediction] = useState('');
+    const [predictions, setPredictions] = useState([]);
     const [forecastRange, setForecastRange] = useState();
     const [running, setRunning] = useState(false);
     const [indexes, setIndexes] = useState([]);
@@ -26,10 +26,19 @@ const ForecastInput = () => {
                 }
             });
             const { prediction } = await predictMLPResponse.json();
-            setPrediction(prediction);
+            setPredictions(predictions => [...predictions, prediction]);
             setRunning(false);
             setIndexes(inputIndexes);
             setInput(graphData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleClearPrediction = async (event) => {
+        event.preventDefault();
+        try {
+            setPredictions([]);
         } catch (error) {
             console.error(error);
         }
@@ -71,6 +80,9 @@ const ForecastInput = () => {
                 </label>
                 <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
             </form>
+            <form onSubmit={handleClearPrediction}>
+                <button className='custombuttonclear' type="submit" title="Clear forecasts">Clear Forecasts</button>
+            </form>
             {inputData === '' && running === false && (
                 <div>
                     <h2>Prediction:</h2>
@@ -83,14 +95,14 @@ const ForecastInput = () => {
                     <p style={{ fontSize: '24px' }}>Training...</p>
                 </div>
             )}
-            {prediction && running === false && inputData !== '' && (
+            {predictions && running === false && inputData !== '' && (
                 <>
                     <div>
                         <h2>Prediction:</h2>
                     </div>
                     <br />
                     <div>
-                        <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={prediction} />
+                        <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} />
                     </div>
                 </>
             )}

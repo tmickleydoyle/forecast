@@ -49,10 +49,6 @@ export default async function handler(req, res) {
     const nn = new MLP(windowSize, 2, 1);
     const forecastRange = body.forecastRange || 5;
 
-    console.log('forecastRange', forecastRange)
-
-    console.log('windowSize: ', windowSize)
-
     const target = inputData.slice(windowSize).map((x) => [x]);
 
     const input = windowizeArray(inputData, windowSize);

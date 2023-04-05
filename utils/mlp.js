@@ -57,7 +57,7 @@ export class MLP {
         this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
     }
 
-    train(input, target, lambda = 0.0001, dropout_prob = 0.05) {
+    train(input, target, lambda = 0.0001, dropout_prob = 0.02) {
         let prev_output_error = null;
         let num_lower = 0;
         for (let i = 0; i <= this.epochs; i++) {
