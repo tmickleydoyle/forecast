@@ -29,31 +29,51 @@ function denormalizeData(data, min, max) {
   return denormalizedData;
 }
 
+function windowizeArray(array, windowSize) {
+  const windowizedArray = [];
+  for (let i = 0; i < array.length - windowSize + 1; i++) {
+    const newArray = [];
+    for (let j = 0; j < windowSize; j++) {
+      newArray.push(array[i + j]);
+    }
+    windowizedArray.push(newArray); // Add the new array to the input array
+  }
+  return windowizedArray;
+}
+
 export default async function handler(req, res) {
     const { method, body } = req;
 
     const inputData = body.inputData.split(',').map(x => Number(x.trim()));
-    const input = [];
     const windowSize = body.windowSize || 1;
     const nn = new MLP(windowSize, 2, 1);
+    const forecastRange = body.forecastRange || 5;
+
+    console.log('forecastRange', forecastRange)
+
+    console.log('windowSize: ', windowSize)
 
     const target = inputData.slice(windowSize).map((x) => [x]);
 
-    for (let i = 0; i < inputData.length - windowSize + 1; i++) {
-      const newArray = [];
-      for (let j = 0; j < windowSize; j++) {
-        newArray.push(inputData[i + j]);
-      }
-      input.push(newArray); // Add the new array to the input array
-    }
+    const input = windowizeArray(inputData, windowSize);
 
     const normalizedData = normalizeData(input, target);
 
     const predictInput = normalizedData.input.pop();
     nn.train(matrix(normalizedData.input), matrix(normalizedData.target));
 
-    const outputPredict = nn.predict(predictInput)
-    const denormalizedOutput = denormalizeData(outputPredict.toArray(), Math.min(...target), Math.max(...target));
+    const forecastPrections = [];
+    // let forecastInput = predictInput;
+    let forecastInput = [];
+    let forecastInputArray = windowizeArray(predictInput, windowSize);
 
-    res.status(200).json({ prediction: denormalizedOutput[0]});
+    for (let i = 0; i < forecastRange; i++) {
+      let outputPredict = nn.predict(matrix([forecastInputArray[forecastInputArray.length - 1]]));
+      forecastPrections.push(outputPredict.toArray()[0][0]);
+      forecastInput = [...predictInput, ...forecastPrections];
+      forecastInputArray = windowizeArray(forecastInput, windowSize);
+    }
+
+    const denormalizedOutput = denormalizeData(forecastPrections, Math.min(...target), Math.max(...target));
+    res.status(200).json({ prediction: denormalizedOutput});
 };

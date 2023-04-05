@@ -60,7 +60,7 @@ export class MLP {
     train(input, target, lambda = 0.0001, dropout_prob = 0.05) {
         let prev_output_error = null;
         let num_lower = 0;
-        for (let i = 0; i < this.epochs; i++) {
+        for (let i = 0; i <= this.epochs; i++) {
             let input_layer = input;
             let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
             let hidden_layer_activated = hidden_layer_logits.map(v => this.activation(v, false));

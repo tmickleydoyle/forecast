@@ -6,6 +6,13 @@ import React, { useCallback, useRef } from 'react';
 const LineGraph = ({ title, labels, data, forecast }) => {
     let ref = useRef(null);
 
+    const forecastIndex = [];
+    for (let i = 0; i < forecast.length; i++) {
+        forecastIndex.push((i + data.length).toString());
+    }
+
+    const forecastData = forecastIndex.map((x, i) => ({ x: x, y: forecast[i] }));
+
     const downloadChart = useCallback(() => {
         const link = document.createElement("a");
         link.download = "chart.png";
@@ -75,22 +82,12 @@ const LineGraph = ({ title, labels, data, forecast }) => {
                                 "pointRadius": 1
                             },
                             {
-                                "data": [{
-                                    x: `${data.length}`,
-                                    y: forecast
-                                }],
+                                "data": forecastData,
                                 "label": "Forecast",
                                 "pointBackgroundColor": "#FFDB58",
                                 "pointBorderColor": "#FFDB58",
-                                "pointRadius": 25
-                            },
-                            {
-                                "data": [{
-                                    x: `${labels.length + 1}`,
-                                    y: Math.max(...data) + 1
-                                }],
-                                " ": 'rgba(255, 0, 0, 0)',
-                                "pointBorderColor": 'rgba(255, 0, 0, 0)',
+                                "pointRadius": 5,
+                                "borderWidth": 1,
                             }
                         ]
                     }
