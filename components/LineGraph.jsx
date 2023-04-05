@@ -86,9 +86,12 @@ const LineGraph = ({ title, labels, data, forecast }) => {
       padding: 50
     },
     plugins: {
-      legend: {
-        display: false
-      }
+        legend: {
+            display: true,
+            labels: {
+                boxWidth: 0,
+            },
+        },
     },
     scales: {
       y: {
@@ -108,7 +111,7 @@ const LineGraph = ({ title, labels, data, forecast }) => {
           "labels": labels,
           "datasets": [
             {
-              "label": "Y Values",
+              "label": "Historical Data",
               "data": data,
               "cubicInterpolationMode": "monotone",
               "backgroundColor": ["#000080"],

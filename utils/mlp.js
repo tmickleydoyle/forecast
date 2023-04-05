@@ -37,7 +37,7 @@ export function softplus(x, derivative) {
     return log(1 + exp(x), e);
 }
 
-function linear(x, derivative = false) {
+export function linear(x, derivative = false) {
     return derivative ? 1 : x;
 }
 
