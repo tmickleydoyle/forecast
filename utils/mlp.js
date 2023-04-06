@@ -47,7 +47,7 @@ export class MLP {
         this.hidden_nodes = args[1];
         this.output_nodes = args[2];
 
-        this.epochs = 2500;
+        this.epochs = 1200;
         this.activation = relu;
         this.lr = 0.0005;
         this.l2 = 0.001;
