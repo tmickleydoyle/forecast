@@ -38,7 +38,7 @@ const LineGraph = ({ title, labels, data, forecast }) => {
     }
     const forecastData = forecastIndex.map((x, i) => ({ x: x, y: forecastArray[i] }));
     return {
-      label: `Forecast #  ${(i + 1).toString()}`,
+      label: `Forecast # ${(i + 1).toString()}`,
       data: forecastData,
       pointBackgroundColor: colors[i % colors.length],
       pointBorderColor: colors[i % colors.length],
@@ -117,7 +117,7 @@ const LineGraph = ({ title, labels, data, forecast }) => {
               "backgroundColor": ["#000080"],
               "borderColor": ["#000080"],
               "pointRadius": 1,
-              "order": 2 // add order property
+              "order": 2
             },
             ...forecastDatasets
           ]

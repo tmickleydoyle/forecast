@@ -59,7 +59,6 @@ export default async function handler(req, res) {
     nn.train(matrix(normalizedData.input), matrix(normalizedData.target));
 
     const forecastPrections = [];
-    // let forecastInput = predictInput;
     let forecastInput = [];
     let forecastInputArray = windowizeArray(predictInput, windowSize);
 
