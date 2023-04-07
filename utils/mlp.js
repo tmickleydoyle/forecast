@@ -93,7 +93,7 @@ export class MLP {
                 console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
                 if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
                     num_same_error++;
-                    if (num_same_error >= 3) {
+                    if (num_same_error >= 5) {
                         this.bad_model = true;
                     }
                     num_lower++;
