@@ -10,7 +10,7 @@ const ForecastInput = () => {
     const [running, setRunning] = useState(false);
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
-    const [lowQuality, setLowQuality] = useState(false);
+    const [lowQuality, setLowQuality] = useState();
     const codeSnippet = `
     // Input Data
     Original Data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -25,6 +25,7 @@ const ForecastInput = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLowQuality();
         try {
             setRunning(true);
             setIndexes([]);
@@ -41,7 +42,9 @@ const ForecastInput = () => {
             const { prediction, low_model_quality } = await predictMLPResponse.json();
             setLowQuality(low_model_quality);
             setRunning(false);
-            setPredictions(predictions => [...predictions, prediction]);
+            if (low_model_quality !== true) {
+                setPredictions(predictions => [...predictions, prediction]);
+            }
             setIndexes(inputIndexes);
             setInput(graphData);
         } catch (error) {
@@ -53,7 +56,7 @@ const ForecastInput = () => {
         event.preventDefault();
         try {
             setPredictions([]);
-            setLowQuality(false);
+            setLowQuality();
         } catch (error) {
             console.error(error);
         }
@@ -105,7 +108,7 @@ const ForecastInput = () => {
             <br />
             {lowQuality === true && (
                 <div className="notification">
-                    <p>Model quality is low. Please adjust the Lookback Window. Click `Clear Forecast` to remove alert.</p>
+                    <p>Model quality is low. Please adjust the Lookback Window. Forecasted values will not be plotted.</p>
                 </div>
             )}         
             {inputData === '' && (

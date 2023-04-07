@@ -90,7 +90,7 @@ export class MLP {
             this.synapse_zero = add(add(this.synapse_zero, reg_zero), multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
 
             if (i % 100 == 0) {
-                console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
+                // console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
                 if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
                     if (prev_output_error == mean(abs(output_error))) {
                         num_same_error++;
