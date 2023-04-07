@@ -14,6 +14,7 @@ const ForecastInput = () => {
     const codeSnippet = `
     // Input Data
     Original Data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
     // Lookback Window: 1 (Default)
     Windowed Data: [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
     // Lookback Window: 2
@@ -62,7 +63,7 @@ const ForecastInput = () => {
         <div className='centertexts'>
             <br />
             <h1>General Trend Forecast</h1>
-            <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next number in the sequence.</p>
+            <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
             <br />
             <form onSubmit={handleSubmit}>
                 <label>
