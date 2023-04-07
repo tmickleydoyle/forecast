@@ -8,13 +8,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/chart.js": "^2.9.37",
     "chart.js": "^4.2.1",
+    "highlight.js": "^11.7.0",
     "mathjs": "^11.7.0",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-popover": "^0.5.10"
   },
   "devDependencies": {
     "eslint": "8.36.0",

@@ -110,3 +110,50 @@ input {
   border-radius: 8px;
 }
 
+.code-box {
+  text-align: left;
+}
+.buttonexample {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #808080;
+  font-family: Helvetica, Arial, sans-serif;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.buttonexample:hover {
+  color: #586e75;
+}
+
+.buttonexample:active {
+  background-color: #073642;
+  box-shadow: none;
+}
+
+.buttonexample:focus {
+  outline: none;
+}
+
+.buttonexample:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buttonexample--large {
+  font-size: 20px;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+
+.notification {
+  background-color: #ffe4e1;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}

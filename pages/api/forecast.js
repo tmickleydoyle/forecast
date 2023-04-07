@@ -69,6 +69,8 @@ export default async function handler(req, res) {
       forecastInputArray = windowizeArray(forecastInput, windowSize);
     }
 
+    const low_model_quality = nn.low_model_quality();
+
     const denormalizedOutput = denormalizeData(forecastPrections, Math.min(...target), Math.max(...target));
-    res.status(200).json({ prediction: denormalizedOutput});
+    res.status(200).json({ prediction: denormalizedOutput, low_model_quality: low_model_quality });
 };

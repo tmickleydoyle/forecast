@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import LineGraph from './LineGraph';
+import CodeBoxPopover from './CodeBoxPopover';
+import React, { useState } from 'react';
 
 const ForecastInput = () => {
     const [inputData, setInputData] = useState('');
@@ -9,6 +10,17 @@ const ForecastInput = () => {
     const [running, setRunning] = useState(false);
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
+    const [lowQuality, setLowQuality] = useState(false);
+    const codeSnippet = `
+    // Input Data
+    Original Data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    // Lookback Window: 1 (Default)
+    Windowed Data: [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
+    // Lookback Window: 2
+    Windowed Data: [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
+    // Lookback Window: 3
+    Windowed Data: [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8], [7, 8, 9], [8, 9, 10]]`;
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,9 +37,10 @@ const ForecastInput = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            const { prediction } = await predictMLPResponse.json();
-            setPredictions(predictions => [...predictions, prediction]);
+            const { prediction, low_model_quality } = await predictMLPResponse.json();
+            setLowQuality(low_model_quality);
             setRunning(false);
+            setPredictions(predictions => [...predictions, prediction]);
             setIndexes(inputIndexes);
             setInput(graphData);
         } catch (error) {
@@ -39,6 +52,7 @@ const ForecastInput = () => {
         event.preventDefault();
         try {
             setPredictions([]);
+            setLowQuality(false);
         } catch (error) {
             console.error(error);
         }
@@ -47,7 +61,7 @@ const ForecastInput = () => {
     return (
         <div className='centertexts'>
             <br />
-            <h1>MLP Forecast</h1>
+            <h1>General Trend Forecast</h1>
             <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next number in the sequence.</p>
             <br />
             <form onSubmit={handleSubmit}>
@@ -80,10 +94,20 @@ const ForecastInput = () => {
                 </label>
                 <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
             </form>
+            <div>
+                <CodeBoxPopover buttonTitle='Lookback Window Example' codeSnippet={codeSnippet} />
+            </div>
+            <br />
             <form onSubmit={handleClearPrediction}>
-                <button className='custombuttonclear' type="submit" title="Clear forecasts">Clear Forecasts</button>
+                <button className='custombutton' type="submit" title="Clear forecasts">Clear Forecasts</button>
             </form>
-            {inputData === '' && running === false && (
+            <br />
+            {lowQuality === true && (
+                <div className="notification">
+                    <p>Model quality is low. Please adjust the Lookback Window. Click `Clear Forecast` to remove alert.</p>
+                </div>
+            )}         
+            {inputData === '' && (
                 <div>
                     <h2>Prediction:</h2>
                     <p style={{ fontSize: '24px' }}>Enter data to predict.</p>

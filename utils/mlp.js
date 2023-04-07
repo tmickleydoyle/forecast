@@ -53,6 +53,8 @@ export class MLP {
         this.l2 = 0.001;
         this.dropout_prob = 0.02;
 
+        this.bad_model = false;
+
         this.synapse_zero = random([this.input_nodes, this.hidden_nodes], 0, 1);
         this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
     }
@@ -60,6 +62,7 @@ export class MLP {
     train(input, target, lambda = 0.00001) {
         let prev_output_error = null;
         let num_lower = 0;
+        let num_same_error = 0;
         for (let i = 0; i <= this.epochs; i++) {
             let input_layer = input;
             let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
@@ -87,14 +90,13 @@ export class MLP {
             this.synapse_zero = add(add(this.synapse_zero, reg_zero), multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
 
             if (i % 100 == 0) {
-               console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
-                if (prev_output_error !== null && prev_output_error * 1.05 <= mean(abs(output_error))) {
-                    num_lower++;
-                    if (num_lower >= 3) {
-                        this.synapse_zero = random([this.input_nodes, this.hidden_nodes], 0, 1);
-                        this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
-                        num_lower = 0;
+                console.log(`Epoch ${i} - Error: ${mean(abs(output_error))}`);
+                if (prev_output_error !== null && prev_output_error <= mean(abs(output_error))) {
+                    num_same_error++;
+                    if (num_same_error >= 3) {
+                        this.bad_model = true;
                     }
+                    num_lower++;
                     if (num_lower >= 5) {
                         console.log(`Early Stop at Epoch ${i} - Current Error: ${mean(abs(output_error))} - Previous Error: ${prev_output_error}`);
                         break;
@@ -105,6 +107,11 @@ export class MLP {
             prev_output_error = mean(abs(output_error));
         }
     }
+
+    low_model_quality() {
+        return this.bad_model;
+    }
+
     predict(input) {
         let input_layer = input;
         let hidden_layer = multiply(input_layer, this.synapse_zero).map(v => this.activation(v, false));
