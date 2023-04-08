@@ -12,8 +12,7 @@ const ForecastInput = () => {
     const [input, setInput] = useState([]);
     const [lowQuality, setLowQuality] = useState();
     const codeSnippet = `
-    // Input Data
-    Original Data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    Input Data: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
     // Lookback Window: 1 (Default)
     Windowed Data: [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
