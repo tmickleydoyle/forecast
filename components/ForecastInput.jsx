@@ -75,7 +75,7 @@ const ForecastInput = () => {
                         type="text"
                         value={inputData}
                         onChange={(event) => setInputData(event.target.value)}
-                        placeholder="Enter data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
+                        placeholder="Input Data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
                     />
                 </label>
                 <label>
@@ -84,7 +84,7 @@ const ForecastInput = () => {
                         type="number"
                         value={windowSize}
                         onChange={(event) => setWindowSize(event.target.value)}
-                        placeholder="Input Size (default: 1)"
+                        placeholder="Lookback Window (default: 1)"
                     />
                 </label>
                 <label>
