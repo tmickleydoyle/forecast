@@ -113,6 +113,11 @@ input {
 .code-box {
   text-align: left;
 }
+
+.code-box {
+    border: 1px solid black;
+}
+
 .buttonexample {
   border: none;
   background-color: transparent;

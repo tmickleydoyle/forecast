@@ -2,6 +2,9 @@ import LineGraph from './LineGraph';
 import CodeBoxPopover from './CodeBoxPopover';
 import React, { useState } from 'react';
 
+import codeSnippet from '../data/code_snippet';
+import about from '../data/about';
+
 const ForecastInput = () => {
     const [inputData, setInputData] = useState('');
     const [windowSize, setWindowSize] = useState();
@@ -11,16 +14,6 @@ const ForecastInput = () => {
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
     const [lowQuality, setLowQuality] = useState();
-    const codeSnippet = `
-    Input Data: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-
-    // Lookback Window: 1 (Default)
-    Windowed Data: [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
-    // Lookback Window: 2
-    Windowed Data: [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
-    // Lookback Window: 3
-    Windowed Data: [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8], [7, 8, 9], [8, 9, 10]]`;
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -62,78 +55,84 @@ const ForecastInput = () => {
     };
 
     return (
-        <div className='centertexts'>
-            <br />
-            <h1>General Trend Forecast</h1>
-            <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
-            <br />
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <input style={{ width: '30%' }}
-                        id="inputData"
-                        type="text"
-                        value={inputData}
-                        onChange={(event) => setInputData(event.target.value)}
-                        placeholder="Input Data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
-                    />
-                </label>
-                <label>
-                    <input style={{ width: '20%' }}
-                        id="windowSize"
-                        type="number"
-                        value={windowSize}
-                        onChange={(event) => setWindowSize(event.target.value)}
-                        placeholder="Lookback Window (default: 1)"
-                    />
-                </label>
-                <label>
-                    <input style={{ width: '20%' }}
-                        id="forecastRange"
-                        type="number"
-                        value={forecastRange}
-                        onChange={(event) => setForecastRange(event.target.value)}
-                        placeholder="Prediction Range (default: 5)"
-                    />
-                </label>
-                <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
-            </form>
-            <div>
-                <CodeBoxPopover buttonTitle='Lookback Window Example' codeSnippet={codeSnippet} />
-            </div>
-            <br />
-            <form onSubmit={handleClearPrediction}>
-                <button className='custombutton' type="submit" title="Clear forecasts">Clear Forecasts</button>
-            </form>
-            <br />
-            {lowQuality === true && (
-                <div className="notification">
-                    <p>Model quality is low. Please adjust the Lookback Window. Forecasted values will not be plotted.</p>
-                </div>
-            )}         
-            {inputData === '' && (
+        <>
+            <div className='centertexts'>
+                <br />
                 <div>
-                    <h2>Prediction:</h2>
-                    <p style={{ fontSize: '24px' }}>Enter data to predict.</p>
+                    <CodeBoxPopover buttonTitle='About for App' codeSnippet={about} language="language-html" />
                 </div>
-            )}
-            {running === true && inputData !== '' && (
+                <br />
+                <h1>General Trend Forecast</h1>
+                <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
+                <br />
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <input style={{ width: '30%' }}
+                            id="inputData"
+                            type="text"
+                            value={inputData}
+                            onChange={(event) => setInputData(event.target.value)}
+                            placeholder="Input Data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
+                        />
+                    </label>
+                    <label>
+                        <input style={{ width: '20%' }}
+                            id="windowSize"
+                            type="number"
+                            value={windowSize}
+                            onChange={(event) => setWindowSize(event.target.value)}
+                            placeholder="Lookback Window (default: 1)"
+                        />
+                    </label>
+                    <label>
+                        <input style={{ width: '20%' }}
+                            id="forecastRange"
+                            type="number"
+                            value={forecastRange}
+                            onChange={(event) => setForecastRange(event.target.value)}
+                            placeholder="Prediction Range (default: 5)"
+                        />
+                    </label>
+                    <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
+                </form>
                 <div>
-                    <h2>Prediction:</h2>
-                    <p style={{ fontSize: '24px' }}>Training...</p>
+                    <CodeBoxPopover buttonTitle='Lookback Window Example' codeSnippet={codeSnippet} language="language-javascript" />
                 </div>
-            )}
-            {predictions && running === false && inputData !== '' && (
-                <>
+                <br />
+                <form onSubmit={handleClearPrediction}>
+                    <button className='custombutton' type="submit" title="Clear forecasts">Clear Forecasts</button>
+                </form>
+                <br />
+                {lowQuality === true && (
+                    <div className="notification">
+                        <p>Model quality is low. Please adjust the Lookback Window. Forecasted values will not be plotted.</p>
+                    </div>
+                )}         
+                {inputData === '' && (
                     <div>
                         <h2>Prediction:</h2>
+                        <p style={{ fontSize: '24px' }}>Enter data to predict.</p>
                     </div>
-                    <br />
+                )}
+                {running === true && inputData !== '' && (
                     <div>
-                        <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} />
+                        <h2>Prediction:</h2>
+                        <p style={{ fontSize: '24px' }}>Training...</p>
                     </div>
-                </>
-            )}
-        </div>
+                )}
+                {predictions && running === false && inputData !== '' && (
+                    <>
+                        <div>
+                            <h2>Prediction:</h2>
+                        </div>
+                        <br />
+                        <div>
+                            <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} />
+                        </div>
+                    </>
+                )}
+            </div>
+        </>
     );
 };
 

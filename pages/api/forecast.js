@@ -5,14 +5,12 @@ const MLP = require('../../utils/mlp');
 function normalizeData(input, target) {
   const normalizedData = {};
 
-  // normalize input data
   const inputMin = Math.min(...input.flat());
   const inputMax = Math.max(...input.flat());
   const normalizedInput = input.map(row =>
     row.map(val => (val - inputMin) / (inputMax - inputMin))
   );
 
-  // normalize target data
   const targetMin = Math.min(...target.flat());
   const targetMax = Math.max(...target.flat());
   const normalizedTarget = target.map(row =>
@@ -36,7 +34,7 @@ function windowizeArray(array, windowSize) {
     for (let j = 0; j < windowSize; j++) {
       newArray.push(array[i + j]);
     }
-    windowizedArray.push(newArray); // Add the new array to the input array
+    windowizedArray.push(newArray);
   }
   return windowizedArray;
 }

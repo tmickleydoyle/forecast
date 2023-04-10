@@ -12,7 +12,7 @@ function CodeBox(props) {
     return (
         <div className="code-box">
                 <pre className="code hljs">
-                    <code className="language-javascript">{props.codeSnippet}</code>
+                    <code className={props.language}>{props.codeSnippet}</code>
                 </pre>
         </div>
     );
