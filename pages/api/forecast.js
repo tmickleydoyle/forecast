@@ -44,7 +44,9 @@ export default async function handler(req, res) {
 
     const inputData = body.inputData.split(',').map(x => Number(x.trim()));
     const windowSize = body.windowSize || 1;
-    const nn = new MLP(windowSize, 2, 1);
+    const l1Regularization = body.l1Regularization || 0.005;
+    const l2Regularization = body.l2Regularization || 0.001;
+    const nn = new MLP(windowSize, 2, 1, l1Regularization, l2Regularization);
     const forecastRange = body.forecastRange || 5;
 
     const target = inputData.slice(windowSize).map((x) => [x]);

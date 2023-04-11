@@ -49,8 +49,8 @@ export class MLP {
 
         this.epochs = 1200;
         this.activation = relu;
-        this.lr = 0.005;
-        this.l2 = 0.001;
+        this.lr = args[3];
+        this.l2 = args[4];
         this.dropout_prob = 0.02;
         this.lambda = 0.0000001;
 

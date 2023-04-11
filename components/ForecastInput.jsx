@@ -27,7 +27,7 @@ const ForecastInput = () => {
             const inputIndexes = Array.from(graphData, (_, i) => i);
             const predictMLPResponse = await fetch('/api/forecast', {
                 method: 'POST',
-                body: JSON.stringify({ inputData, windowSize, forecastRange }),
+                body: JSON.stringify({ inputData, windowSize, forecastRange, l1Regularization, l2Regularization }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -40,6 +40,40 @@ const ForecastInput = () => {
             }
             setIndexes(inputIndexes);
             setInput(graphData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleExampleSubmit = async (event) => {
+        event.preventDefault();
+        setLowQuality();
+        try {
+            setRunning(true);
+            setIndexes([]);
+            setInput([]);
+            setInputData('1,2,3,2,1,2,3,2,1,2,3,2');
+            setWindowSize(5);
+            setForecastRange(5);
+            console.log(inputData)
+            const predictMLPResponse = await fetch('/api/forecast', {
+                method: 'POST',
+                body: JSON.stringify({
+                    inputData: '1,2,3,2,1,2,3,2,1,2,3,2',
+                    forecastRange: 5,
+                    windowSize: 5 }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const { prediction, low_model_quality } = await predictMLPResponse.json();
+            setLowQuality(low_model_quality);
+            setRunning(false);
+            if (low_model_quality !== true) {
+                setPredictions(predictions => [...predictions, prediction]);
+            }
+            setIndexes([1,2,3,4,5,6,7,8,9,10,11,12]);
+            setInput([1,2,3,2,1,2,3,2,1,2,3,2]);
         } catch (error) {
             console.error(error);
         }
@@ -66,7 +100,7 @@ const ForecastInput = () => {
                 <h1>General Trend Forecast</h1>
                 <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
                 <br />
-                <form onSubmit={handleSubmit} style={{ padding: '10px', margin: '10px' }}>
+                <form style={{ padding: '10px', margin: '10px' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
                         <label htmlFor="inputData">Input Data (comma-separated):</label>
@@ -127,10 +161,11 @@ const ForecastInput = () => {
 
 
                 <br />
-                <button className="custombutton" type="submit" title="Each submit produces a new forecast">Submit</button>
-                </form>
-                <form onSubmit={handleClearPrediction}>
-                    <button className='custombutton' type="submit" title="Clear forecasts">Clear Forecasts</button>
+                <button className="custombutton" onClick={handleSubmit} type="submit" title="Each submit produces a new forecast">Forecast</button>
+                <a> </a>
+                <button className='custombutton' onClick={handleClearPrediction} type="submit" title="Clear forecasts">Clear Forecasts</button>
+                <a> </a>
+                <button className="custombutton" onChange={(event) => setInputData('1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2')} onClick={handleExampleSubmit} type="submit" title="Each submit produces a new forecast">Example Forecast</button>
                 </form>
                 <br />
                 {lowQuality === true && (
