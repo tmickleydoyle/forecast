@@ -2,7 +2,6 @@ import LineGraph from './LineGraph';
 import CodeBoxPopover from './CodeBoxPopover';
 import React, { useState } from 'react';
 
-import codeSnippet from '../data/code_snippet';
 import about from '../data/about';
 
 const ForecastInput = () => {
@@ -10,6 +9,8 @@ const ForecastInput = () => {
     const [windowSize, setWindowSize] = useState();
     const [predictions, setPredictions] = useState([]);
     const [forecastRange, setForecastRange] = useState();
+    const [l1Regularization, setL1Regularization] = useState();
+    const [l2Regularization, setL2Regularization] = useState();
     const [running, setRunning] = useState(false);
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
@@ -65,40 +66,69 @@ const ForecastInput = () => {
                 <h1>General Trend Forecast</h1>
                 <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
                 <br />
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <input style={{ width: '30%' }}
+                <form onSubmit={handleSubmit} style={{ padding: '10px', margin: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                        <label htmlFor="inputData">Input Data (comma-separated):</label>
+                        <input
                             id="inputData"
                             type="text"
                             value={inputData}
                             onChange={(event) => setInputData(event.target.value)}
-                            placeholder="Input Data (comma-separated): 1,2,3,2,1,2,3,2,1,2,3,2"
+                            placeholder="1,2,3,2,1,2,3,2,1,2,3,2"
+                            style={{ width: '100%' }}
                         />
-                    </label>
-                    <label>
-                        <input style={{ width: '20%' }}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                        <label htmlFor="windowSize">Lookback Window (default: 1):</label>
+                        <input
                             id="windowSize"
                             type="number"
                             value={windowSize}
                             onChange={(event) => setWindowSize(event.target.value)}
-                            placeholder="Lookback Window (default: 1)"
+                            placeholder="1"
+                            style={{ width: '100%' }}
                         />
-                    </label>
-                    <label>
-                        <input style={{ width: '20%' }}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                        <label htmlFor="forecastRange">Prediction Range (default: 5):</label>
+                        <input
                             id="forecastRange"
                             type="number"
                             value={forecastRange}
                             onChange={(event) => setForecastRange(event.target.value)}
-                            placeholder="Prediction Range (default: 5)"
+                            placeholder="5"
+                            style={{ width: '100%' }}
                         />
-                    </label>
-                    <button className='custombutton' type="submit" title="Each submit produces a new forecast">Submit</button>
-                </form>
-                <div>
-                    <CodeBoxPopover buttonTitle='Lookback Window Example' codeSnippet={codeSnippet} language="language-javascript" />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                        <label htmlFor="l1Regularization">L1 Regularization (default: 0.005):</label>
+                        <input
+                            id="l1Regularization"
+                            type="decimal"
+                            value={l1Regularization}
+                            onChange={(event) => setL1Regularization(event.target.value)}
+                            placeholder="0.005"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <label htmlFor="l2Regularization">L2 Regularization (default: 0.001):</label>
+                        <input
+                            id="l2Regularization"
+                            type="decimal"
+                            value={l2Regularization}
+                            onChange={(event) => setL2Regularization(event.target.value)}
+                            placeholder="0.001"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
                 </div>
+
+
                 <br />
+                <button className="custombutton" type="submit" title="Each submit produces a new forecast">Submit</button>
+                </form>
                 <form onSubmit={handleClearPrediction}>
                     <button className='custombutton' type="submit" title="Clear forecasts">Clear Forecasts</button>
                 </form>

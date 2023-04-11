@@ -49,9 +49,10 @@ export class MLP {
 
         this.epochs = 1200;
         this.activation = relu;
-        this.lr = 0.0005;
+        this.lr = 0.005;
         this.l2 = 0.001;
         this.dropout_prob = 0.02;
+        this.lambda = 0.0000001;
 
         this.bad_model = false;
 
@@ -59,7 +60,7 @@ export class MLP {
         this.synapse_one = random([this.hidden_nodes, this.output_nodes], 0, 1);
     }
 
-    train(input, target, lambda = 0.00001) {
+    train(input, target) {
         let prev_output_error = null;
         let num_lower = 0;
         let num_same_error = 0;
@@ -83,8 +84,8 @@ export class MLP {
             let hidden_error = multiply(output_delta, transpose(this.synapse_one));
             let hidden_delta = dotMultiply(hidden_error, hidden_layer_logits.map(v => this.activation(v, true)));
 
-            let reg_one = multiply(this.synapse_one, lambda);
-            let reg_zero = multiply(this.synapse_zero, lambda);
+            let reg_one = multiply(this.synapse_one, this.lambda);
+            let reg_zero = multiply(this.synapse_zero, this.lambda);
 
             this.synapse_one = add(add(this.synapse_one, reg_one), multiply(transpose(hidden_layer_activated), multiply(output_delta, this.lr)));
             this.synapse_zero = add(add(this.synapse_zero, reg_zero), multiply(transpose(input_layer), multiply(hidden_delta, this.lr)));
