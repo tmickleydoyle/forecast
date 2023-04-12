@@ -48,6 +48,7 @@ const ForecastInput = () => {
     const handleExampleSubmit = async (event) => {
         event.preventDefault();
         setLowQuality();
+        setPredictions([]);
         try {
             setRunning(true);
             setIndexes([]);
@@ -164,8 +165,6 @@ const ForecastInput = () => {
                 <button className="custombutton" onClick={handleSubmit} type="submit" title="Each submit produces a new forecast">Forecast</button>
                 <a> </a>
                 <button className='custombutton' onClick={handleClearPrediction} type="submit" title="Clear forecasts">Clear Forecasts</button>
-                <a> </a>
-                <button className="custombutton" onChange={(event) => setInputData('1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2')} onClick={handleExampleSubmit} type="submit" title="Each submit produces a new forecast">Example Forecast</button>
                 </form>
                 <br />
                 {lowQuality === true && (
@@ -176,7 +175,9 @@ const ForecastInput = () => {
                 {inputData === '' && (
                     <div>
                         <h2>Prediction:</h2>
-                        <p style={{ fontSize: '24px' }}>Enter data to predict.</p>
+                        <p style={{ fontSize: '24px' }}>Enter data to predict or click the example button below to get started.</p>
+                        <a> </a>
+                        <button className="custombutton" onChange={(event) => setInputData('1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2')} onClick={handleExampleSubmit} type="submit" title="Each submit produces a new forecast">Example Forecast</button>
                     </div>
                 )}
                 {running === true && inputData !== '' && (
