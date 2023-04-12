@@ -40,11 +40,11 @@ const LineGraph = ({ title, labels, data, forecast }) => {
     return {
       label: `Forecast # ${(i + 1).toString()}`,
       data: forecastData,
-      pointBackgroundColor: colors[i % colors.length],
-      pointBorderColor: colors[i % colors.length],
-      pointRadius: 5,
-      borderWidth: 1,
-      fill: false
+      cubicInterpolationMode: "monotone",
+      backgroundColor: colors[i % colors.length],
+      borderColor: colors[i % colors.length],
+      pointRadius: 1,
+      order: 2
     };
   });
 
