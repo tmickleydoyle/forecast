@@ -26,16 +26,19 @@ const colors = [
 ];
 
 
-const LineGraph = ({ title, labels, data, forecast }) => {
+const LineGraph = ({ title, labels, data, forecast, forecastLine }) => {
   let ref = useRef(null);
 
   const label = data.length;
+
+  const validationDataset = forecastLine.map((x, i) => ({ x: (i + label).toString(), y: x }));
 
   const forecastDatasets = forecast.map((forecastArray, i) => {
     const forecastIndex = [];
     for (let i = 0; i < forecastArray.length; i++) {
         forecastIndex.push((i + data.length).toString());
     }
+
     const forecastData = forecastIndex.map((x, i) => ({ x: x, y: forecastArray[i] }));
     return {
       label: `Forecast # ${(i + 1).toString()}`,
@@ -102,7 +105,6 @@ const LineGraph = ({ title, labels, data, forecast }) => {
 
   return (
     <>
-      <br /> 
       <button type="button" className="btn btn-outline-secondary btn-sm margin-left" onClick={downloadChart}>Download Chart</button>
       <h3 className="metrics-card-center">{title}</h3>
       <Line
@@ -116,6 +118,16 @@ const LineGraph = ({ title, labels, data, forecast }) => {
               "cubicInterpolationMode": "monotone",
               "backgroundColor": ["#000080"],
               "borderColor": ["#000080"],
+              "pointRadius": 1,
+              "order": 2
+            },
+            {
+              "label": "Test Data",
+              "data": validationDataset,
+              "cubicInterpolationMode": "monotone",
+              "backgroundColor": ["#000080"],
+              "borderColor": ["#000080"],
+              "borderDash": [3, 5],
               "pointRadius": 1,
               "order": 2
             },

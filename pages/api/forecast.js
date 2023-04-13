@@ -42,7 +42,7 @@ function windowizeArray(array, windowSize) {
 export default async function handler(req, res) {
     const { method, body } = req;
 
-    const inputData = body.inputData.split(',').map(x => Number(x.trim()));
+    const inputData = body.graphData;
     const windowSize = body.windowSize || 1;
     const l1Regularization = body.l1Regularization || 0.005;
     const l2Regularization = body.l2Regularization || 0.001;

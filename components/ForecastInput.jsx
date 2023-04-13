@@ -15,6 +15,8 @@ const ForecastInput = () => {
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
     const [lowQuality, setLowQuality] = useState();
+    const [forecastLine, setForecastLine] = useState([]);
+    const [splitPercentage, setSplitPercentage] = useState(100);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -23,16 +25,20 @@ const ForecastInput = () => {
             setRunning(true);
             setIndexes([]);
             setInput([]);
-            const graphData = inputData.trim().split(',').map(Number);
+            const data = inputData.trim().split(',').map(Number);
+            const splitIndex = Math.floor(data.length * (splitPercentage / 100));
+            const graphData = data.slice(0, splitIndex);
+            const forecastData = data.slice(splitIndex);
             const inputIndexes = Array.from(graphData, (_, i) => i);
             const predictMLPResponse = await fetch('/api/forecast', {
                 method: 'POST',
-                body: JSON.stringify({ inputData, windowSize, forecastRange, l1Regularization, l2Regularization }),
+                body: JSON.stringify({ graphData, windowSize, forecastRange, l1Regularization, l2Regularization }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             const { prediction, low_model_quality } = await predictMLPResponse.json();
+            setForecastLine(forecastData);
             setLowQuality(low_model_quality);
             setRunning(false);
             if (low_model_quality !== true) {
@@ -53,14 +59,14 @@ const ForecastInput = () => {
             setRunning(true);
             setIndexes([]);
             setInput([]);
-            setInputData('1,2,3,2,1,2,3,2,1,2,3,2');
+            setInputData('1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2');
             setWindowSize(5);
             setForecastRange(5);
-            console.log(inputData)
+            setSplitPercentage(100);
             const predictMLPResponse = await fetch('/api/forecast', {
                 method: 'POST',
                 body: JSON.stringify({
-                    inputData: '1,2,3,2,1,2,3,2,1,2,3,2',
+                    graphData: [1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2],
                     forecastRange: 5,
                     windowSize: 5 }),
                 headers: {
@@ -73,6 +79,7 @@ const ForecastInput = () => {
             if (low_model_quality !== true) {
                 setPredictions(predictions => [...predictions, prediction]);
             }
+            setForecastLine([]);
             setIndexes([1,2,3,4,5,6,7,8,9,10,11,12]);
             setInput([1,2,3,2,1,2,3,2,1,2,3,2]);
         } catch (error) {
@@ -159,12 +166,24 @@ const ForecastInput = () => {
                         />
                     </div>
                 </div>
-
-
                 <br />
                 <button className="custombutton" onClick={handleSubmit} type="submit" title="Each submit produces a new forecast">Forecast</button>
                 <a> </a>
                 <button className='custombutton' onClick={handleClearPrediction} type="submit" title="Clear forecasts">Clear Forecasts</button>
+                <br />
+                <br />
+                <div>
+                    <label htmlFor="TestPercent">Test Percent (default: 80):</label>
+                    <br />
+                    <input
+                        id="splitPercentage"
+                        type="number"
+                        value={splitPercentage}
+                        onChange={(event) => setSplitPercentage(event.target.value)}
+                        placeholder="100"
+                        style={{ width: '15%' }}
+                    />
+                </div>
                 </form>
                 <br />
                 {lowQuality === true && (
@@ -191,9 +210,8 @@ const ForecastInput = () => {
                         <div>
                             <h2>Prediction:</h2>
                         </div>
-                        <br />
                         <div>
-                            <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} />
+                            <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} forecastLine={forecastLine}/>
                         </div>
                     </>
                 )}
