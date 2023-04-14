@@ -51,8 +51,8 @@ export class MLP {
         this.activation = relu;
         this.lr = args[3];
         this.l2 = args[4];
-        this.dropout_prob = 0.02;
-        this.lambda = 0.0000001;
+        this.dropout_prob = 0.03;
+        this.lambda = 0.000001;
 
         this.bad_model = false;
 
@@ -69,11 +69,11 @@ export class MLP {
             let hidden_layer_logits = multiply(input_layer, this.synapse_zero);
             let hidden_layer_activated = hidden_layer_logits.map(v => this.activation(v, false));
 
-            if (this.dropout_pro > 0) {
+            if (this.dropout_prob > 0) {
                 let dropout_mask = random([this.hidden_nodes], 0, 1);
-                dropout_mask = dropout_mask.map(v => v >= this.dropout_pro ? 1 : 0);
+                dropout_mask = dropout_mask.map(v => v >= this.dropout_prob ? 1 : 0);
                 hidden_layer_activated = dotMultiply(hidden_layer_activated, dropout_mask);
-                hidden_layer_activated = dotDivide(hidden_layer_activated, 1 - this.dropout_pro);
+                hidden_layer_activated = dotDivide(hidden_layer_activated, 1 - this.dropout_prob);
             }
 
             let output_layer_logits = multiply(hidden_layer_activated, this.synapse_one);

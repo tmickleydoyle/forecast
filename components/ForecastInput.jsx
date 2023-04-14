@@ -15,7 +15,7 @@ const ForecastInput = () => {
     const [indexes, setIndexes] = useState([]);
     const [input, setInput] = useState([]);
     const [lowQuality, setLowQuality] = useState();
-    const [forecastLine, setForecastLine] = useState([]);
+    const [testLine, setTestLine] = useState([]);
     const [splitPercentage, setSplitPercentage] = useState(100);
 
     const handleSubmit = async (event) => {
@@ -38,7 +38,7 @@ const ForecastInput = () => {
                 }
             });
             const { prediction, low_model_quality } = await predictMLPResponse.json();
-            setForecastLine(forecastData);
+            setTestLine(forecastData);
             setLowQuality(low_model_quality);
             setRunning(false);
             if (low_model_quality !== true) {
@@ -63,6 +63,8 @@ const ForecastInput = () => {
             setWindowSize(5);
             setForecastRange(5);
             setSplitPercentage(100);
+            setL1Regularization(0.005);
+            setL2Regularization(0.001);
             const predictMLPResponse = await fetch('/api/forecast', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -79,7 +81,7 @@ const ForecastInput = () => {
             if (low_model_quality !== true) {
                 setPredictions(predictions => [...predictions, prediction]);
             }
-            setForecastLine([]);
+            setTestLine([]);
             setIndexes([1,2,3,4,5,6,7,8,9,10,11,12]);
             setInput([1,2,3,2,1,2,3,2,1,2,3,2]);
         } catch (error) {
@@ -143,6 +145,26 @@ const ForecastInput = () => {
                             style={{ width: '100%' }}
                         />
                     </div>
+                </div>
+                <br />
+                <button className="custombutton" onClick={handleSubmit} type="submit" title="Each submit produces a new forecast">Forecast</button>
+                <a> </a>
+                <button className='custombutton' onClick={handleClearPrediction} type="submit" title="Clear forecasts">Clear Forecasts</button>
+                <br />
+                <br />
+                <h2>Advanced Settings</h2>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                        <label htmlFor="TestPercent">Validation Percent (default: 80):</label>
+                        <input
+                            id="splitPercentage"
+                            type="number"
+                            value={splitPercentage}
+                            onChange={(event) => setSplitPercentage(event.target.value)}
+                            placeholder="100"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
                     <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
                         <label htmlFor="l1Regularization">L1 Regularization (default: 0.005):</label>
                         <input
@@ -165,24 +187,6 @@ const ForecastInput = () => {
                             style={{ width: '100%' }}
                         />
                     </div>
-                </div>
-                <br />
-                <button className="custombutton" onClick={handleSubmit} type="submit" title="Each submit produces a new forecast">Forecast</button>
-                <a> </a>
-                <button className='custombutton' onClick={handleClearPrediction} type="submit" title="Clear forecasts">Clear Forecasts</button>
-                <br />
-                <br />
-                <div>
-                    <label htmlFor="TestPercent">Test Percent (default: 80):</label>
-                    <br />
-                    <input
-                        id="splitPercentage"
-                        type="number"
-                        value={splitPercentage}
-                        onChange={(event) => setSplitPercentage(event.target.value)}
-                        placeholder="100"
-                        style={{ width: '15%' }}
-                    />
                 </div>
                 </form>
                 <br />
@@ -211,7 +215,7 @@ const ForecastInput = () => {
                             <h2>Prediction:</h2>
                         </div>
                         <div>
-                            <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} forecastLine={forecastLine}/>
+                            <LineGraph title={`Line Graph with Forecast`} labels={indexes} data={input} forecast={predictions} testLine={testLine}/>
                         </div>
                     </>
                 )}

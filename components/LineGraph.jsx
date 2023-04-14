@@ -26,12 +26,12 @@ const colors = [
 ];
 
 
-const LineGraph = ({ title, labels, data, forecast, forecastLine }) => {
+const LineGraph = ({ title, labels, data, forecast, testLine }) => {
   let ref = useRef(null);
 
   const label = data.length;
 
-  const validationDataset = forecastLine.map((x, i) => ({ x: (i + label).toString(), y: x }));
+  const validationDataset = testLine.map((x, i) => ({ x: (i + label).toString(), y: x }));
 
   const forecastDatasets = forecast.map((forecastArray, i) => {
     const forecastIndex = [];
@@ -129,7 +129,7 @@ const LineGraph = ({ title, labels, data, forecast, forecastLine }) => {
               "borderColor": ["#000080"],
               "borderDash": [3, 5],
               "pointRadius": 1,
-              "order": 2
+              "order": 1
             },
             ...forecastDatasets
           ]
