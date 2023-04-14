@@ -44,8 +44,8 @@ const LineGraph = ({ title, labels, data, forecast, testLine }) => {
       label: `Forecast # ${(i + 1).toString()}`,
       data: forecastData,
       cubicInterpolationMode: "monotone",
-      backgroundColor: colors[i % colors.length],
-      borderColor: colors[i % colors.length],
+      backgroundColor: "rgba(204, 204, 204, 0.5)",
+      borderColor: "rgba(204, 204, 204, 0.5)",
       pointRadius: 1,
       order: 2
     };
