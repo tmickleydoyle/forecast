@@ -44,8 +44,8 @@ export default async function handler(req, res) {
 
     const inputData = body.graphData;
     const windowSize = body.windowSize || 1;
-    const l1Regularization = body.l1Regularization || 0.005;
-    const l2Regularization = body.l2Regularization || 0.001;
+    const l1Regularization = body.l1Regularization || 0.00005;
+    const l2Regularization = body.l2Regularization || 0.00001;
     const nn = new MLP(windowSize, 2, 1, l1Regularization, l2Regularization);
     const forecastRange = body.forecastRange || 5;
 
@@ -56,7 +56,12 @@ export default async function handler(req, res) {
     const normalizedData = normalizeData(input, target);
 
     const predictInput = normalizedData.input.pop();
-    nn.train(matrix(normalizedData.input), matrix(normalizedData.target));
+    // Loop through the data and train the network incrementally because the data is time series
+    for (let i = 0; i < normalizedData.input.length; i++) {
+      nn.train(matrix([normalizedData.input[i]]), matrix([normalizedData.target[i]]));
+    }
+    
+    // nn.train(matrix(normalizedData.input), matrix(normalizedData.target));
 
     const forecastPrections = [];
     let forecastInput = [];
