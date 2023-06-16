@@ -16,7 +16,7 @@ const ForecastInput = () => {
     const [input, setInput] = useState([]);
     const [lowQuality, setLowQuality] = useState();
     const [testLine, setTestLine] = useState([]);
-    const [splitPercentage, setSplitPercentage] = useState(100);
+    const [splitPercentage, setSplitPercentage] = useState(80);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -103,9 +103,9 @@ const ForecastInput = () => {
         <>
             <div className='centertexts'>
                 <br />
-                <div>
+                {/* <div>
                     <CodeBoxPopover buttonTitle='About for App' codeSnippet={about} language="language-html" />
-                </div>
+                </div> */}
                 <br />
                 <h1>General Trend Forecast</h1>
                 <p style={{ fontSize: '18px' }}>The model utilizes a rolling window of numbers in order to predict the next numbers in the sequence.</p>
@@ -155,17 +155,17 @@ const ForecastInput = () => {
                 <h2>Advanced Settings</h2>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
-                        <label htmlFor="TestPercent">Validation Percent (default: 80):</label>
+                        <label htmlFor="TestPercent">Validation Percent (default: 80%):</label>
                         <input
                             id="splitPercentage"
                             type="number"
                             value={splitPercentage}
                             onChange={(event) => setSplitPercentage(event.target.value)}
-                            placeholder="100"
+                            placeholder="80"
                             style={{ width: '100%' }}
                         />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
+                    {/* <div style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}>
                         <label htmlFor="l1Regularization">L1 Regularization (default: 0.005):</label>
                         <input
                             id="l1Regularization"
@@ -186,7 +186,7 @@ const ForecastInput = () => {
                             placeholder="0.001"
                             style={{ width: '100%' }}
                         />
-                    </div>
+                    </div> */}
                 </div>
                 </form>
                 <br />
